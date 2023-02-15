@@ -6,7 +6,6 @@ import numpy as np
 import seaborn as sns
 import time
 import matplotlib.pyplot as plt
-# import xgboost as xgb
 plt.style.use('fivethirtyeight')
 plt.style.use('dark_background')
 
@@ -26,8 +25,8 @@ from sklearn.decomposition import PCA
 #--------------------------------------------------------------------------------------------------------------------------------------------------------
 start_time=time.time()  #Program Start time
 #Titles
-tit1,tit2 = st.columns((4, 1))
-tit1.markdown("<h1 style='text-align: left;'> Machine Learning in Healthcare </h1>",unsafe_allow_html=True)
+tit1,tit2 = st.beta_columns((4, 1))
+tit1.markdown("<h1 style='text-align: center;'><u>Machine Learning in Healthcare</u> </h1>",unsafe_allow_html=True)
 tit2.image("healthcare2.png")
 st.sidebar.title("Dataset and Classifier")
 
@@ -68,7 +67,7 @@ X,Y=selected_dataset(dataset_name)
 
 #Plot output variable
 def plot_op(dataset_name):
-    col1, col2 = st.columns((1, 5))
+    col1, col2 = st.beta_columns((1, 5))
     plt.figure(figsize=(12, 3))
     plt.title("Classes in 'Y'")
     if dataset_name == "Heart Attack":
@@ -93,12 +92,12 @@ def add_parameter_ui(clf_name):
 
     if clf_name == "Logistic Regression":
         R = st.sidebar.slider("Regularization",0.1,10.0,step=0.1)
-        MI = st.sidebar.slider("Maximum Iterations",50,400,step=50)
+        MI = st.sidebar.slider("max_iter",50,400,step=50)
         params["R"] = R
         params["MI"] = MI
 
     elif clf_name == "KNN":
-        K = st.sidebar.slider("N Neighbors",1,20)
+        K = st.sidebar.slider("n_neighbors",1,20)
         params["K"] = K
 
     elif clf_name == "SVM":
@@ -108,36 +107,36 @@ def add_parameter_ui(clf_name):
         params["kernel"] = kernel
 
     elif clf_name == "Decision Trees":
-        M = st.sidebar.slider("Maximum Depth", 2, 20)
+        M = st.sidebar.slider("max_depth", 2, 20)
         C = st.sidebar.selectbox("Criterion", ("gini", "entropy"))
-        SS = st.sidebar.slider("Minimum Sample Split",1,10)
+        SS = st.sidebar.slider("min_samples_split",1,10)
         params["M"] = M
         params["C"] = C
         params["SS"] = SS
 
     elif clf_name == "Random Forest":
-        N = st.sidebar.slider("N Estimators",50,500,step=50,value=100)
-        M = st.sidebar.slider("Maximum Depth",2,20)
-        C = st.sidebar.selectbox("Criterion",("Gini","Entropy"))
+        N = st.sidebar.slider("n_estimators",50,500,step=50,value=100)
+        M = st.sidebar.slider("max_depth",2,20)
+        C = st.sidebar.selectbox("Criterion",("gini","entropy"))
         params["N"] = N
         params["M"] = M
         params["C"] = C
 
     elif clf_name == "Gradient Boosting":
-        N = st.sidebar.slider("N Estimators", 50, 500, step=50,value=100)
+        N = st.sidebar.slider("n_estimators", 50, 500, step=50,value=100)
         LR = st.sidebar.slider("Learning Rate", 0.01, 0.5)
-        L = st.sidebar.selectbox("Loss", ('Deviance', 'Exponential'))
-        M = st.sidebar.slider("Maximum Depth",2,20)
+        L = st.sidebar.selectbox("Loss", ('deviance', 'exponential'))
+        M = st.sidebar.slider("max_depth",2,20)
         params["N"] = N
         params["LR"] = LR
         params["L"] = L
         params["M"] = M
 
     elif clf_name == "XGBoost":
-        N = st.sidebar.slider("N Estimators", 50, 500, step=50, value=50)
+        N = st.sidebar.slider("n_estimators", 50, 500, step=50, value=50)
         LR = st.sidebar.slider("Learning Rate", 0.01, 0.5,value=0.1)
         O = st.sidebar.selectbox("Objective", ('binary:logistic','reg:logistic','reg:squarederror',"reg:gamma"))
-        M = st.sidebar.slider("Maximum Depth", 1, 20,value=6)
+        M = st.sidebar.slider("max_depth", 1, 20,value=6)
         G = st.sidebar.slider("Gamma",0,10,value=5)
         L = st.sidebar.slider("reg_lambda",1.0,5.0,step=0.1)
         A = st.sidebar.slider("reg_alpha",0.0,5.0,step=0.1)
@@ -162,10 +161,10 @@ def get_classifier(clf_name,params):
     if clf_name == "Logistic Regression":
         clf = LogisticRegression(C=params["R"],max_iter=params["MI"])
 
-    elif clf_name == "K-Nearest Neighbours":
+    elif clf_name == "KNN":
         clf = KNeighborsClassifier(n_neighbors=params["K"])
 
-    elif clf_name == "Support Vector Machines":
+    elif clf_name == "SVM":
         clf = SVC(kernel=params["kernel"],C=params["C"])
 
     elif clf_name == "Decision Trees":
@@ -216,7 +215,7 @@ def compute(Y_pred,Y_test):
     plt.colorbar()
     st.pyplot()
 
-    c1, c2 = st.columns((4,3))
+    c1, c2 = st.beta_columns((4,3))
     #Output plot
     plt.figure(figsize=(12,6))
     plt.scatter(range(len(Y_pred)),Y_pred,color="yellow",lw=5,label="Predictions")
@@ -276,7 +275,7 @@ def user_inputs_ui(dataset_name,data):
 #User values
 st.markdown("<hr>",unsafe_allow_html=True)
 st.header("2) User Values")
-with st.expander("See more"):
+with st.beta_expander("See more"):
     st.markdown("""
     In this section you can use your own values to predict the target variable. 
     Input the required values below and you will get your status based on the values. <br>
@@ -296,12 +295,9 @@ def user_predict():
         X = data.drop(["output"], axis=1)
         U_pred = clf.predict([[user_val[col] for col in X.columns]])
 
-    st.subheader("Your risk status of having "+ dataset_name +" is: ")
+    st.subheader("Your Status: ")
     if U_pred == 0:
         st.write(U_pred[0], " - You are not at high risk :)")
     else:
         st.write(U_pred[0], " - You are at high risk :(")
 user_predict()  #Predict the status of user.
-
-
-#-------------------------------------------------------------------------END------------------------------------------------------------------------#
