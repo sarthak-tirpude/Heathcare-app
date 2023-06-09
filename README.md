@@ -1,9 +1,9 @@
-### Heathcare-app
-## Datasets used : 
-# Heart attack analysis prediction dataset:
+# Heathcare-app
+# Datasets used : 
+### Heart attack analysis prediction dataset:
 https://www.kaggle.com/datasets/rashikrahmanpritom/heart-attack-analysis-prediction-dataset
 
-# Dataset features :
+### Dataset features :
 
 Age : Age of the patient
 
@@ -34,7 +34,7 @@ thalach : maximum heart rate achieved
 
 target : 0= less chance of heart attack 1= more chance of heart attack
 
-# Breast cancer dataset:
+### Breast cancer dataset:
 https://www.kaggle.com/datasets/yasserh/breast-cancer-dataset
 
 
